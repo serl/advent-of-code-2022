@@ -7,10 +7,25 @@ on:
     branches: [main]
 
 jobs:
-  ci:
-    name: CI
+  shellcheck:
+    name: ShellCheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+
+  shfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install -y shfmt
+      - run: shfmt -d -i 4 .
+
+  tests:
+    name: Bats tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install -y bats
+      - run: bats -r .
