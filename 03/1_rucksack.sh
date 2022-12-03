@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit
+source common.sh
 
 rucksack_priority() {
-    mapfile -t compartments < <(split_compartments "$1")
+    readarray -t compartments < <(split_compartments "$1")
     missplaced=$(find_only_missplaced "${compartments[0]}" "${compartments[1]}")
     item_priority "$missplaced"
 }
@@ -21,19 +23,6 @@ find_only_missplaced() {
             return
         fi
     done
-}
-
-item_priority() {
-    # Item types a through z have priorities 1 through 26
-    # Item types A through Z have priorities 27 through 52
-    ascii_code=$(printf %d "'$1")
-    lowercase=$((ascii_code - 96))
-    if [[ $lowercase -gt 0 ]]; then
-        echo $lowercase
-    else
-        uppercase=$((lowercase + 58))
-        echo $uppercase
-    fi
 }
 
 total=0
