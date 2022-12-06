@@ -1,43 +1,48 @@
 #!/usr/bin/env bash
 
-value_for_stack() {
-    local line=$1 stack=$2
-    idx=$((1 + 4 * stack))
-    echo "${line:$idx:1}"
-}
-
-declare -a stacks
-initialize_stacks() {
+read_header() {
     for i in $(seq $# -1 1); do
         line="${*:$i:1}"
 
         if [[ $line =~ [0-9] ]]; then
-            while true; do
-                label="$(value_for_stack "$line" ${#stacks[@]})"
-                if [[ $label ]]; then
-                    stacks[$label]=""
-                else
-                    break
-                fi
-            done
+            create_empty_stacks "$line"
         elif [[ $line =~ \[ ]]; then
-            index=0
-            for label in "${!stacks[@]}"; do
-                crate=$(value_for_stack "$line" "$index")
-                [[ ${crate// /} ]] && stacks[$label]+=$crate
-                index=$((index + 1))
-            done
+            fill_stacks_by_row "$line"
         fi
     done
 
-    declare -p stacks
+    declare -p STACKS
 }
 
-move_one() {
-    local from=$1 to=$2
-    item=${stacks[$from]: -1}
-    stacks[$from]=${stacks[$from]:0:-1}
-    stacks[$to]+=$item
+create_empty_stacks() {
+    local line="$1"
+    STACKS=()
+
+    while true; do
+        label="$(read_header_col "$line" ${#STACKS[@]})"
+        if [[ $label ]]; then
+            STACKS[$label]=""
+        else
+            break
+        fi
+    done
+}
+
+fill_stacks_by_row() {
+    local line="$1"
+
+    index=0
+    for label in "${!STACKS[@]}"; do
+        crate=$(read_header_col "$line" "$index")
+        [[ ${crate// /} ]] && STACKS[$label]+=$crate
+        index=$((index + 1))
+    done
+}
+
+read_header_col() {
+    local line=$1 stack=$2
+    idx=$((1 + 4 * stack))
+    echo "${line:$idx:1}"
 }
 
 move() {
@@ -45,7 +50,14 @@ move() {
     for _ in $(seq "$count"); do
         move_one "$from" "$to"
     done
-    declare -p stacks
+    declare -p STACKS
+}
+
+move_one() {
+    local from=$1 to=$2
+    item=${STACKS[$from]: -1}
+    STACKS[$from]=${STACKS[$from]:0:-1}
+    STACKS[$to]+=$item
 }
 
 header=()
@@ -58,11 +70,11 @@ while IFS=$'\n' read -r line; do
     elif [[ $line ]]; then
         header+=("$line")
     else
-        initialize_stacks "${header[@]}"
+        read_header "${header[@]}"
     fi
 done
 
-for items in "${stacks[@]}"; do
+for items in "${STACKS[@]}"; do
     echo -n "${items: -1}"
 done
 echo
