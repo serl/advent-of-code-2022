@@ -19,5 +19,5 @@ all_different() {
     return 0
 }
 
-IFS=$'\n' read -r datastream
+IFS=$'\n' read -r datastream || true
 find_start_of_packet "$datastream"

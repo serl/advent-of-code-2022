@@ -2,7 +2,7 @@ setup_file() {
     cd "$(dirname "$BATS_TEST_FILENAME")"
 }
 setup() {
-    load 1_find_start_of_packet.sh </dev/null >/dev/null
+    source 1_find_start_of_packet.sh </dev/null >/dev/null
 }
 
 @test "output on test_input 1" {
