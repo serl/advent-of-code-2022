@@ -7,12 +7,15 @@ setup() {
 
 @test "output on test_input" {
     output=$(./1_rearrange_stacks.sh <test_input | tail -1)
-    [ "$output" = CMZ ]
+    echo "output=$output"
+    [[ $output = CMZ ]]
 }
 
 @test "output" {
+    [[ $CI ]] || skip "Running on CI only"
     output=$(./1_rearrange_stacks.sh <input | tail -1)
-    [ "$output" = WCZTHTMPS ]
+    echo "output=$output"
+    [[ $output = WCZTHTMPS ]]
 }
 
 @test "move_one" {

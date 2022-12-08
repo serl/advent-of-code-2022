@@ -5,9 +5,17 @@ setup() {
     source 2_pairs_overlapping.sh </dev/null >/dev/null
 }
 
-@test "output" {
+@test "output on test_input" {
     output=$(./2_pairs_overlapping.sh <test_input | tail -1)
-    [ "$output" = 4 ]
+    echo "output=$output"
+    [[ $output = 4 ]]
+}
+
+@test "output" {
+    [[ $CI ]] || skip "Running on CI only"
+    output=$(./2_pairs_overlapping.sh <input | tail -1)
+    echo "output=$output"
+    [[ $output = 835 ]]
 }
 
 @test "overlap/no overlap" {

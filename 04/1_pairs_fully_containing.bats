@@ -5,9 +5,17 @@ setup() {
     source 1_pairs_fully_containing.sh </dev/null >/dev/null
 }
 
-@test "output" {
+@test "output on test_input" {
     output=$(./1_pairs_fully_containing.sh <test_input | tail -1)
-    [ "$output" = 2 ]
+    echo "output=$output"
+    [[ $output = 2 ]]
+}
+
+@test "output" {
+    [[ $CI ]] || skip "Running on CI only"
+    output=$(./1_pairs_fully_containing.sh <input | tail -1)
+    echo "output=$output"
+    [[ $output = 462 ]]
 }
 
 @test "fully_contains/no overlap" {
