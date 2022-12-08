@@ -7,12 +7,15 @@ setup() {
 
 @test "output on test_input" {
     output=$(./2_rearrange_stacks_9001.sh <test_input | tail -1)
-    [ "$output" = MCD ]
+    echo "output=$output"
+    [[ "$output" = MCD ]]
 }
 
 @test "output" {
+    [[ $CI ]] || skip "Running on CI only"
     output=$(./2_rearrange_stacks_9001.sh <input | tail -1)
-    [ "$output" = BLSGJSDTS ]
+    echo "output=$output"
+    [[ "$output" = BLSGJSDTS ]]
 }
 
 @test "move" {
