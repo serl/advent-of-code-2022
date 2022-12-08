@@ -5,8 +5,17 @@ setup() {
     source 2_badges.sh </dev/null >/dev/null
 }
 
+@test "output on test_input" {
+    output=$(./2_badges.sh <test_input | tail -1)
+    echo "output=$output"
+    [[ $output = 'The total is 70' ]]
+}
+
 @test "output" {
-    ./2_badges.sh <test_input | tail -1 | grep '70'
+    [[ $CI ]] || skip "Running on CI only"
+    output=$(./2_badges.sh <input | tail -1)
+    echo "output=$output"
+    [[ $output = 'The total is 2633' ]]
 }
 
 @test "group_priority" {
