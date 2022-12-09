@@ -44,16 +44,27 @@ walker_forward() {
 }
 
 walk_direction() {
-    local row=$1 col=$2 walker_row=$3 walker_col=$4 walker_action=$5
-    debug "walk_direction($*)" >&2
-    shift 5
+    local row=$1 col=$2 walker_row=$3 walker_col=$4 walker_action=$5 origin_value
+    origin_value=$(get_grid_element "$row" "$col")
+    debug "walk_direction($*) [$origin_value]"
 
     local grid_row_count grid_col_count
     grid_row_count=$(grid_row_count)
     grid_col_count=$(grid_col_count)
 
     while row=$($walker_row "$row" "$grid_row_count") && col=$($walker_col "$col" "$grid_col_count"); do
-        debug "walking($row, $col)" >&2
-        $walker_action "$row" "$col" "$@" || break
+        value=$(get_grid_element "$row" "$col")
+        debug "walking($row, $col) [$value]"
+
+        $walker_action "$row" "$col" "$value" "$origin_value" || break
     done
+}
+
+walk_all_directions() {
+    local row=$1 col=$2 walker_action=$3
+
+    walk_direction "$row" "$col" walker_still walker_backward "$walker_action"
+    walk_direction "$row" "$col" walker_backward walker_still "$walker_action"
+    walk_direction "$row" "$col" walker_still walker_forward "$walker_action"
+    walk_direction "$row" "$col" walker_forward walker_still "$walker_action"
 }

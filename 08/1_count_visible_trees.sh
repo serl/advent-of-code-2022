@@ -20,41 +20,14 @@ count_visible_trees() {
 }
 
 is_visible() {
-    local row=$1 col=$2
-    debug ""
+    local row=$1 col=$2 result
 
-    is_visible_from_left "$row" "$col" ||
-        is_visible_from_top "$row" "$col" ||
-        is_visible_from_right "$row" "$col" ||
-        is_visible_from_bottom "$row" "$col"
-}
-is_visible_from_left() {
-    debug "from left"
-    is_visible_from "$@" walker_still walker_backward
-}
-is_visible_from_top() {
-    debug "from top"
-    is_visible_from "$@" walker_backward walker_still
-}
-is_visible_from_right() {
-    debug "from right"
-    is_visible_from "$@" walker_still walker_forward
-}
-is_visible_from_bottom() {
-    debug "from bottom"
-    is_visible_from "$@" walker_forward walker_still
-}
+    result=$(walk_all_directions "$row" "$col" is_visible_action)
 
-is_visible_from() {
-    local row=$1 col=$2 value result
-    value=$(get_grid_element "$row" "$col")
-    result=$(walk_direction "$@" is_visible_action "$value")
-    debug "Result=$result"
-    [[ $result != invisible ]]
+    [[ $result != invisible$'\n'invisible$'\n'invisible$'\n'invisible ]]
 }
 is_visible_action() {
-    local row=$1 col=$2 origin_value=$3 value
-    value=$(get_grid_element "$row" "$col")
+    local row=$1 col=$2 value=$3 origin_value=$4
     if [[ $value -ge $origin_value ]]; then
         echo invisible
         return 1
