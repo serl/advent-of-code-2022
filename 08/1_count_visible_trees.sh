@@ -29,63 +29,31 @@ is_visible() {
         is_visible_from_bottom "$row" "$col"
 }
 is_visible_from_left() {
-    next_row() {
-        echo "$1"
-    }
-    next_col() {
-        local current=$1
-        [[ $current = 0 ]] && return 1
-        echo $((current - 1))
-    }
     [[ $DEBUG ]] && echo left
-    is_visible_from "$@"
+    is_visible_from "$@" walker_still walker_backward
 }
 is_visible_from_top() {
-    next_row() {
-        local current=$1
-        [[ $current = 0 ]] && return 1
-        echo $((current - 1))
-    }
-    next_col() {
-        echo "$1"
-    }
     [[ $DEBUG ]] && echo top
-    is_visible_from "$@"
+    is_visible_from "$@" walker_backward walker_still
 }
 is_visible_from_right() {
-    local grid_col_count
-    grid_col_count=$(grid_col_count)
-    next_row() {
-        echo "$1"
-    }
-    next_col() {
-        local current=$1
-        [[ $current -ge $((grid_col_count - 1)) ]] && return 1
-        echo $((current + 1))
-    }
     [[ $DEBUG ]] && echo right
-    is_visible_from "$@"
+    is_visible_from "$@" walker_still walker_forward
 }
 is_visible_from_bottom() {
-    local grid_row_count
-    grid_row_count=$(grid_row_count)
-    next_row() {
-        local current=$1
-        [[ $current -ge $((grid_row_count - 1)) ]] && return 1
-        echo $((current + 1))
-    }
-    next_col() {
-        echo "$1"
-    }
     [[ $DEBUG ]] && echo bottom
-    is_visible_from "$@"
+    is_visible_from "$@" walker_forward walker_still
 }
 is_visible_from() {
-    local row=$1 col=$2 value
+    local row=$1 col=$2 next_row=$3 next_col=$4 value
     value=$(get_grid_element "$row" "$col")
     [[ $DEBUG ]] && echo "X $row $col $value"
 
-    while row=$(next_row "$row") && col=$(next_col "$col"); do
+    local grid_row_count grid_col_count
+    grid_row_count=$(grid_row_count)
+    grid_col_count=$(grid_col_count)
+
+    while row=$($next_row "$row" "$grid_row_count") && col=$($next_col "$col" "$grid_col_count"); do
         compare_value=$(get_grid_element "$row" "$col")
         [[ $DEBUG ]] && echo "C $row $col $compare_value"
         [[ $compare_value -ge $value ]] &&

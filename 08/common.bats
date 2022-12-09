@@ -44,3 +44,19 @@ setup() {
 
     [[ $(get_grid_element 10 10) = '' ]]
 }
+
+@test "walker_still" {
+    [[ $(walker_still 4) == 4 ]]
+}
+@test "walker_backward middle" {
+    [[ $(walker_backward 4) == 3 ]]
+}
+@test "walker_backward start" {
+    ! walker_backward 0
+}
+@test "walker_forward middle" {
+    [[ $(walker_forward 4 10) == 5 ]]
+}
+@test "walker_forward end" {
+    ! walker_forward 10 10
+}
