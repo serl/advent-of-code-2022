@@ -23,6 +23,7 @@ is_visible() {
     local row=$1 col=$2 result
 
     result=$(walk_all_directions "$row" "$col" is_visible_action)
+    debug "result=$result"
 
     [[ $result != invisible$'\n'invisible$'\n'invisible$'\n'invisible ]]
 }

@@ -61,10 +61,14 @@ walk_direction() {
 }
 
 walk_all_directions() {
-    local row=$1 col=$2 walker_action=$3
+    local row=$1 col=$2 walker_action=$3 direction_action=${4:-echo}
 
-    walk_direction "$row" "$col" walker_still walker_backward "$walker_action"
-    walk_direction "$row" "$col" walker_backward walker_still "$walker_action"
-    walk_direction "$row" "$col" walker_still walker_forward "$walker_action"
-    walk_direction "$row" "$col" walker_forward walker_still "$walker_action"
+    # going up
+    $direction_action "$(walk_direction "$row" "$col" walker_backward walker_still "$walker_action")"
+    # going left
+    $direction_action "$(walk_direction "$row" "$col" walker_still walker_backward "$walker_action")"
+    # going down?
+    $direction_action "$(walk_direction "$row" "$col" walker_forward walker_still "$walker_action")"
+    # going right
+    $direction_action "$(walk_direction "$row" "$col" walker_still walker_forward "$walker_action")"
 }
