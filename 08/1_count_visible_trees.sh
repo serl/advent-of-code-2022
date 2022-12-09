@@ -21,7 +21,7 @@ count_visible_trees() {
 
 is_visible() {
     local row=$1 col=$2
-    [[ $DEBUG ]] && echo
+    debug ""
 
     is_visible_from_left "$row" "$col" ||
         is_visible_from_top "$row" "$col" ||
@@ -29,38 +29,36 @@ is_visible() {
         is_visible_from_bottom "$row" "$col"
 }
 is_visible_from_left() {
-    [[ $DEBUG ]] && echo left
+    debug "from left"
     is_visible_from "$@" walker_still walker_backward
 }
 is_visible_from_top() {
-    [[ $DEBUG ]] && echo top
+    debug "from top"
     is_visible_from "$@" walker_backward walker_still
 }
 is_visible_from_right() {
-    [[ $DEBUG ]] && echo right
+    debug "from right"
     is_visible_from "$@" walker_still walker_forward
 }
 is_visible_from_bottom() {
-    [[ $DEBUG ]] && echo bottom
+    debug "from bottom"
     is_visible_from "$@" walker_forward walker_still
 }
+
 is_visible_from() {
-    local row=$1 col=$2 next_row=$3 next_col=$4 value
+    local row=$1 col=$2 value result
     value=$(get_grid_element "$row" "$col")
-    [[ $DEBUG ]] && echo "X $row $col $value"
-
-    local grid_row_count grid_col_count
-    grid_row_count=$(grid_row_count)
-    grid_col_count=$(grid_col_count)
-
-    while row=$($next_row "$row" "$grid_row_count") && col=$($next_col "$col" "$grid_col_count"); do
-        compare_value=$(get_grid_element "$row" "$col")
-        [[ $DEBUG ]] && echo "C $row $col $compare_value"
-        [[ $compare_value -ge $value ]] &&
-            return 1
-    done
-    [[ $DEBUG ]] && echo visible
-    return 0
+    result=$(walk_direction "$@" is_visible_action "$value")
+    debug "Result=$result"
+    [[ $result != invisible ]]
+}
+is_visible_action() {
+    local row=$1 col=$2 origin_value=$3 value
+    value=$(get_grid_element "$row" "$col")
+    if [[ $value -ge $origin_value ]]; then
+        echo invisible
+        return 1
+    fi
 }
 
 count_visible_trees
