@@ -73,22 +73,22 @@ push_item() {
 
 play_round() {
     for monkey_idx in "${!M_ITEMS[@]}"; do
-        debug "Monkey $monkey_idx:"
+        # debug "Monkey $monkey_idx:"
         while pop_item "$monkey_idx"; do
             # shellcheck disable=SC2153 # ITEM is set by pop_item
-            debug "> popped $ITEM"
+            # debug "> popped $ITEM"
 
             new_value=$((M_OPERATIONS[monkey_idx]))
             [[ $ITEM_STATIC_DIVISOR ]] && new_value=$((new_value / ITEM_STATIC_DIVISOR))
-            debug "> > new value: $new_value"
+            # debug "> > new value: $new_value"
 
             modulus=$((new_value % M_TESTS_DIVISIBLE[monkey_idx]))
             if [[ $modulus = 0 ]]; then
                 next_monkey_idx=${M_DESTINATION_IF_TRUE[$monkey_idx]}
-                debug "> > divisible by ${M_TESTS_DIVISIBLE[$monkey_idx]} -> $next_monkey_idx"
+                # debug "> > divisible by ${M_TESTS_DIVISIBLE[$monkey_idx]} -> $next_monkey_idx"
             else
                 next_monkey_idx=${M_DESTINATION_IF_FALSE[$monkey_idx]}
-                debug "> > not divisible by ${M_TESTS_DIVISIBLE[$monkey_idx]} -> $next_monkey_idx"
+                # debug "> > not divisible by ${M_TESTS_DIVISIBLE[$monkey_idx]} -> $next_monkey_idx"
             fi
 
             push_item "$next_monkey_idx" "$new_value"
