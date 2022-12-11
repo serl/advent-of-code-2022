@@ -78,11 +78,12 @@ play_round() {
             # shellcheck disable=SC2153 # ITEM is set by pop_item
             debug "> popped $ITEM"
 
-            new_value=$((M_OPERATIONS[monkey_idx] / 3))
+            new_value=$((M_OPERATIONS[monkey_idx]))
+            [[ $ITEM_STATIC_DIVISOR ]] && new_value=$((new_value / ITEM_STATIC_DIVISOR))
             debug "> > new value: $new_value"
 
-            divisible=$((new_value % M_TESTS_DIVISIBLE[monkey_idx]))
-            if [[ $divisible = 0 ]]; then
+            modulus=$((new_value % M_TESTS_DIVISIBLE[monkey_idx]))
+            if [[ $modulus = 0 ]]; then
                 next_monkey_idx=${M_DESTINATION_IF_TRUE[$monkey_idx]}
                 debug "> > divisible by ${M_TESTS_DIVISIBLE[$monkey_idx]} -> $next_monkey_idx"
             else

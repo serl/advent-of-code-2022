@@ -48,25 +48,3 @@ setup() {
 
     [[ ${M_ITEMS[0]} = '1, 2, 3' ]]
 }
-
-@test "play_round/1" {
-    parse_input <test_input
-    play_rounds 1
-
-    declare -p M_ITEMS
-    [[ ${M_ITEMS[0]} = '20, 23, 27, 26' ]]
-    [[ ${M_ITEMS[1]} = '2080, 25, 167, 207, 401, 1046' ]]
-    [[ ${M_ITEMS[2]} = '' ]]
-    [[ ${M_ITEMS[3]} = '' ]]
-}
-
-@test "M_INSPECTED_COUNTS after 20 rounds" {
-    parse_input <test_input
-    play_rounds 20
-
-    declare -p M_INSPECTED_COUNTS
-    [[ ${M_INSPECTED_COUNTS[0]} = 101 ]]
-    [[ ${M_INSPECTED_COUNTS[1]} = 95 ]]
-    [[ ${M_INSPECTED_COUNTS[2]} = 7 ]]
-    [[ ${M_INSPECTED_COUNTS[3]} = 105 ]]
-}

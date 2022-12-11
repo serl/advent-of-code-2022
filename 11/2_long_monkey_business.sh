@@ -4,7 +4,9 @@ source common.sh
 
 parse_input
 
-play_rounds "${1:-20}"
+export ITEM_STATIC_DIVISOR=1
+[[ ${#M_ITEMS[@]} -gt 0 ]] &&
+    play_rounds 10000
 
 declare -p M_INSPECTED_COUNTS
 
