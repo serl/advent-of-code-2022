@@ -61,13 +61,13 @@ is_list() {
     [[ ${input:0:1} = '[' ]]
 }
 find_list_len() {
-    local input=$1 open_brakets=0 char
+    local input=$1 open_brackets=0 char
     for ((i = 0; i < ${#input}; i++)); do
         char=${input:$i:1}
-        [[ $char = '[' ]] && open_brakets=$((open_brakets + 1))
-        [[ $char = ']' ]] && open_brakets=$((open_brakets - 1))
+        [[ $char = '[' ]] && open_brackets=$((open_brackets + 1))
+        [[ $char = ']' ]] && open_brackets=$((open_brackets - 1))
 
-        if [[ $open_brakets = 0 ]]; then
+        if [[ $open_brackets = 0 ]]; then
             echo $((i + 1))
             return
         fi
