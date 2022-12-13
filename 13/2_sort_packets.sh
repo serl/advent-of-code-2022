@@ -10,7 +10,7 @@ main() {
     while IFS=$'\n' read -r line; do
         [[ $line ]] && PACKETS+=("$line")
     done
-    sort2
+    sort
 
     key_part_1=$(find_packet '[[2]]')
     key_part_2=$(find_packet '[[6]]')
