@@ -32,6 +32,7 @@ sort() {
         fi
     done
     [[ $swapped ]] && sort
+    return 0
 }
 
 find_packet() {
