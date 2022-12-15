@@ -76,7 +76,7 @@ print_grid() {
     local from_x=$1 to_x=$2 from_y=$3 to_y=$4 value
 
     for ((y = from_y; y <= to_y; y++)); do
-        echo -n "$y "
+        echo -en "$y\t"
         for ((x = from_x; x <= to_x; x++)); do
             value=$(get_value "$x" "$y")
             echo -n "${value:-.}"
